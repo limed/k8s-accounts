@@ -16,7 +16,7 @@ usage() {
 }
 
 check_prereq() {
-    if ! which kubectl; then
+    if ! command -v kubectl; then
         fail "Can't find kubectl tool"
     fi
 }
@@ -38,6 +38,14 @@ while [ "$1" != "" ]; do
             export NAMESPACE="${2}"
             shift
         ;;
+        -h | --help)
+            usage
+            exit 0
+        ;;
+        *)
+            usage
+            exit 0
+        ;;
     esac
     shift
 done
@@ -46,7 +54,7 @@ if [ -z "${KUBECONFIG}" ]; then
     fail "KUBECONFIG environment variable is not set"
 fi
 
-if [ "${CLUSTER_ROLE}" != "view" ] || [ "${CLUSTER_ROLE}" != "edit" ] || [ "${CLUSTER_ROLE}" != "admin" ]; then
+if [ "${CLUSTER_ROLE}" != "view" ] && [ "${CLUSTER_ROLE}" != "edit" ] && [ "${CLUSTER_ROLE}" != "admin" ]; then
     fail  "Error ${CLUSTER_ROLE} is not a valid role. Valid roles are admin, edit or view"
 fi
 

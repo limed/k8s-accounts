@@ -14,9 +14,8 @@ saferm() {
 }
 
 gen_cert() {
-
     local user=${1}
-	if [ -z "${user}" ]; then echo "Usage: $FUNCNAME <user>"; exit 1; fi
+    if [ -z "${user}" ]; then echo "Usage: ${FUNCNAME[0]} <user>"; exit 1; fi
 
     cat > "cfssl-${user}.json" <<EOF
 {
@@ -43,7 +42,7 @@ metadata:
 spec:
   groups:
   - system:authenticated
-  request: $(cat "${cert_name}.csr" | base64 | tr -d '\n')
+  request: $(base64 < "${cert_name}.csr" | tr -d '\n')
   usages:
   - digital signature
   - key encipherment
@@ -168,4 +167,4 @@ saferm "${cert_name}.crt"
 saferm "${cert_name}.csr"
 saferm "${key_name}.pem"
 saferm "${cluster_ca}.pem"
-kubectl delete csr "${csr_name}"
+#kubectl delete csr "${csr_name}"
